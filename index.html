@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>JS snake game</title>
+
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1> My Javascript snake game v0 </h1>
+    <br />
+
+    <!--<div align="center">-->
+    <div>
+        <canvas id="canv" width="400" height="400" style="border:10px solid #34495E;"></canvas>
+    </div>
+    <p id="myText"> Use arrow keys to move snake towards red fruits... </p>
+    <script>
+        can = document.getElementById("canv");
+        ctx = can.getContext("2d");
+        txt = document.getElementById("myText");
+
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, can.width, can.height);
+
+        document.addEventListener("keydown", myKeyHandler);
+        setInterval(myGameLoop, 1000 / 10);
+
+        var mySnake = [{ x: 100, y: 100 }, { x: 110, y: 100 }, { x: 120, y: 100 }, { x: 130, y: 100 }, { x: 140, y: 100 }];
+        var h = {x:140,y:100}; // head
+        var f = {x:200,y:200}; // fruit
+        var xv = 1; yv = 0;
+        var inx = true;
+
+        // draw snake for the first time
+        for (var i = 0; i < mySnake.length; i++) {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(mySnake[i].x, mySnake[i].y, 8, 8);
+        }
+
+        // draw fruit
+        ctx.fillStyle = "red";
+        ctx.fillRect(f.x, f.y, 8, 8);
+
+        function myGameLoop() {
+            h.x = h.x + xv * 10;
+            h.y = h.y + yv * 10;
+            if (h.x > can.width) {
+                h.x = 0;
+            }
+            if (h.x < 0) {
+                h.x = can.width;
+            }
+            if (h.y > can.height) {
+                h.y = 0;
+            }
+            if (h.y < 0) {
+                h.y = can.height;
+            }
+
+            // collision with fruit
+            if (h.x == f.x && h.y == f.y) {
+                inx = false; // do not erase the tail
+                f.x = 10+10*Math.floor(Math.random() * 39);
+                f.y = 10+10*Math.floor(Math.random() * 39);
+            }
+            ctx.fillStyle = "red";
+            ctx.fillRect(f.x, f.y, 8, 8);
+
+            // add the head
+            mySnake.push({ x: h.x, y: h.y });
+            ctx.fillStyle = "blue";
+            ctx.fillRect(h.x, h.y, 8, 8);
+
+            // erase the tail
+            if (inx) {
+                tail = mySnake.shift();
+                ctx.fillStyle = "black";
+                ctx.fillRect(tail.x, tail.y, 8, 8);
+            }
+            inx = true;
+
+            //txt.innerHTML = inx + " --> " + JSON.stringify(mySnake[0]) + " --> " + JSON.stringify(mySnake);
+
+        }
+
+        function myKeyHandler (evt) {
+            switch (evt.keyCode) {
+                case 37:
+                    xv=-1; yv=0; break;
+                case 38:
+                    xv=0; yv=-1; breakl
+                case 39:
+                    xv=1; yv=0; break;
+                case 40:
+                    xv=0; yv=1; break;
+            }
+        }
+    </script>
+
+</body>
+</html>
